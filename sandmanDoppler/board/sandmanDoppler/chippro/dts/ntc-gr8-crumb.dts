@@ -94,10 +94,29 @@
 		vin0-supply = <&reg_ldo3>;
 		vin1-supply = <&reg_ldo4>;
 	};
+
+	i2s {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "gr8-cx2092x";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,mclk-fs = <512>;
+
+		simple-audio-card,cpu {
+			sound-dai = <&i2s0>;
+	    };
+
+	    simple-audio-card,codec {
+	        sound-dai = <&cx2092x>;
+	    };
+    };
+
 };
 
 &codec {
-	status = "okay";
+	compatible = "nextthing,gr8-audio";
+	allwinner,i2s-controller = <&i2s0>;
+	allwinner,audio-codec = <&wm8978>;
+
 };
 
 &ehci0 {
@@ -128,6 +147,12 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c1_pins_a>;
 	status = "okay";
+	cx2092x@41{
+		#sound-dai-cells = <0>;
+		compatible = "conexant,cx2092x";
+		reg = <0x41>;
+		status = "okay";
+    };
 };
 
 &i2s0 {
